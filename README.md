@@ -40,6 +40,7 @@ Skills auto-trigger from natural-language requests too — just describe what yo
 ├── commands/      # 5 slash commands
 └── agents/        # 3 specialist personas (used by /ship)
 CLAUDE.md          # Project conventions for Claude
+index.html         # Static showcase page (open in any browser)
 .editorconfig      # Editor defaults
 .eslintrc.js       # airbnb-base config
 ```

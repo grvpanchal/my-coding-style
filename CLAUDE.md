@@ -8,6 +8,7 @@ A minimal Node.js template wired with [agent-skills](https://github.com/addyosma
 .editorconfig          → Editor defaults (utf-8, 2-space indent, LF)
 .eslintrc.js           → ESLint config extending airbnb-base
 index.js               → Entry point (run with `npm start`)
+index.html             → Static showcase page for the flow
 package.json           → Dependencies and scripts
 .claude/
   skills/              → 7 lifecycle skills (SKILL.md per directory)
