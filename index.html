@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>my-coding-style — minimal agent-skills flow</title>
+    <meta
+      name="description"
+      content="A minimal Node.js template combining ESLint airbnb-base with a five-command agent-skills flow for AI-assisted development."
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #fafaf9;
+        --fg: #1c1917;
+        --muted: #57534e;
+        --line: #e7e5e4;
+        --accent: #c2410c;
+        --code-bg: #f5f5f4;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0c0a09;
+          --fg: #f5f5f4;
+          --muted: #a8a29e;
+          --line: #292524;
+          --accent: #fb923c;
+          --code-bg: #1c1917;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        line-height: 1.55;
+        font-size: 16px;
+      }
+      main {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 6rem;
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 2rem;
+        margin-bottom: 3rem;
+      }
+      h1 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        margin: 0 0 0.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      h1 .accent {
+        color: var(--accent);
+      }
+      .tagline {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+        margin: 3rem 0 1rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      h2::before {
+        content: "§ ";
+        color: var(--accent);
+        font-weight: 400;
+      }
+      p {
+        margin: 0 0 1rem;
+        color: var(--muted);
+      }
+      code,
+      kbd,
+      .mono {
+        font-family:
+          ui-monospace,
+          "SF Mono",
+          Menlo,
+          Monaco,
+          "Cascadia Mono",
+          Consolas,
+          monospace;
+        font-size: 0.92em;
+      }
+      code {
+        background: var(--code-bg);
+        padding: 0.1em 0.4em;
+        border-radius: 4px;
+      }
+      pre {
+        background: var(--code-bg);
+        padding: 1rem 1.25rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        margin: 0 0 1rem;
+        border: 1px solid var(--line);
+      }
+      pre code {
+        background: transparent;
+        padding: 0;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      a:hover {
+        border-bottom-color: var(--accent);
+      }
+
+      /* Flow diagram */
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin: 1.5rem 0 2rem;
+      }
+      .flow-step {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 0.875rem 0.5rem;
+        text-align: center;
+        position: relative;
+      }
+      .flow-step .cmd {
+        font-family: ui-monospace, monospace;
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      .flow-step .phase {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      .flow-step:not(:last-child)::after {
+        content: "→";
+        position: absolute;
+        right: -0.6rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.9rem;
+        z-index: 1;
+      }
+      @media (max-width: 640px) {
+        .flow {
+          grid-template-columns: 1fr;
+        }
+        .flow-step:not(:last-child)::after {
+          content: "↓";
+          right: 50%;
+          top: auto;
+          bottom: -0.7rem;
+          transform: translateX(50%);
+        }
+      }
+
+      /* Command table */
+      .cmd-list {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
+        border-top: 1px solid var(--line);
+      }
+      .cmd-list li {
+        display: grid;
+        grid-template-columns: 7rem 1fr;
+        gap: 1.25rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--line);
+        align-items: baseline;
+      }
+      .cmd-list .cmd {
+        font-family: ui-monospace, monospace;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .cmd-list .desc {
+        color: var(--fg);
+      }
+      .cmd-list .skills {
+        display: block;
+        color: var(--muted);
+        font-size: 0.85rem;
+        margin-top: 0.35rem;
+        font-family: ui-monospace, monospace;
+      }
+      @media (max-width: 640px) {
+        .cmd-list li {
+          grid-template-columns: 1fr;
+          gap: 0.4rem;
+        }
+      }
+
+      /* Persona pills */
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0 1.5rem;
+      }
+      .pill {
+        background: var(--code-bg);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.3rem 0.85rem;
+        font-family: ui-monospace, monospace;
+        font-size: 0.85rem;
+      }
+
+      /* Tree */
+      .tree {
+        font-family: ui-monospace, monospace;
+        font-size: 0.85rem;
+        line-height: 1.7;
+        color: var(--muted);
+      }
+      .tree .file {
+        color: var(--fg);
+      }
+
+      footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--line);
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>my-coding-<span class="accent">style</span></h1>
+        <p class="tagline">
+          A minimal Node.js template — ESLint <code>airbnb-base</code> plus a
+          five-command
+          <a href="https://github.com/addyosmani/agent-skills">agent-skills</a>
+          flow for AI-assisted development.
+        </p>
+      </header>
+
+      <h2>The Flow</h2>
+      <p>
+        Five slash commands in
+        <a href="https://claude.com/claude-code">Claude Code</a>, run in order.
+        Skip what doesn't apply.
+      </p>
+
+      <div class="flow" role="list" aria-label="Development lifecycle flow">
+        <div class="flow-step" role="listitem">
+          <span class="cmd">/spec</span>
+          <span class="phase">Define</span>
+        </div>
+        <div class="flow-step" role="listitem">
+          <span class="cmd">/plan</span>
+          <span class="phase">Plan</span>
+        </div>
+        <div class="flow-step" role="listitem">
+          <span class="cmd">/build</span>
+          <span class="phase">Build</span>
+        </div>
+        <div class="flow-step" role="listitem">
+          <span class="cmd">/review</span>
+          <span class="phase">Review</span>
+        </div>
+        <div class="flow-step" role="listitem">
+          <span class="cmd">/ship</span>
+          <span class="phase">Ship</span>
+        </div>
+      </div>
+
+      <h2>What Each Command Does</h2>
+      <ul class="cmd-list">
+        <li>
+          <span class="cmd">/spec</span>
+          <span class="desc">
+            Turn a vague idea into a structured <code>SPEC.md</code> covering
+            objective, features, and boundaries.
+            <span class="skills">→ spec-driven-development</span>
+          </span>
+        </li>
+        <li>
+          <span class="cmd">/plan</span>
+          <span class="desc">
+            Decompose the spec into vertical-slice tasks with acceptance
+            criteria and dependency ordering.
+            <span class="skills">→ planning-and-task-breakdown</span>
+          </span>
+        </li>
+        <li>
+          <span class="cmd">/build</span>
+          <span class="desc">
+            Implement the next task incrementally with TDD. Debug if anything
+            breaks.
+            <span class="skills">
+              → incremental-implementation, test-driven-development,
+              debugging-and-error-recovery
+            </span>
+          </span>
+        </li>
+        <li>
+          <span class="cmd">/review</span>
+          <span class="desc">
+            Five-axis review: correctness, readability, architecture, security,
+            performance.
+            <span class="skills">→ code-review-and-quality</span>
+          </span>
+        </li>
+        <li>
+          <span class="cmd">/ship</span>
+          <span class="desc">
+            Parallel fan-out to three personas, then a single go/no-go decision
+            with a rollback plan.
+            <span class="skills">→ shipping-and-launch</span>
+          </span>
+        </li>
+      </ul>
+
+      <h2>Specialist Personas</h2>
+      <p>Spawned in parallel by <code>/ship</code> for an independent read.</p>
+      <div class="pills">
+        <span class="pill">code-reviewer</span>
+        <span class="pill">security-auditor</span>
+        <span class="pill">test-engineer</span>
+      </div>
+
+      <h2>Project Layout</h2>
+      <pre class="tree"><code>.claude/
+├── skills/        <span class="file"># 7 lifecycle SKILL.md files</span>
+├── commands/      <span class="file"># 5 slash commands</span>
+└── agents/        <span class="file"># 3 specialist personas</span>
+CLAUDE.md          <span class="file"># project conventions for Claude</span>
+.editorconfig     <span class="file"># 2-space, UTF-8, LF</span>
+.eslintrc.js      <span class="file"># airbnb-base + overrides</span>
+index.js          <span class="file"># entry point</span>
+index.html        <span class="file"># this page</span></code></pre>
+
+      <h2>Code Style</h2>
+      <p>
+        Extends <code>airbnb-base</code>. Project overrides live in
+        <code>.eslintrc.js</code>:
+      </p>
+      <pre><code>module.exports = {
+  extends: 'airbnb-base',
+  rules: {
+    'no-undef': 'off',
+    'no-alert': 'off',
+    'quote-props': 'off',
+    'brace-style': 2,
+    'object-shorthand': 'off',
+    'no-console': 'off',
+  },
+};</code></pre>
+
+      <h2>Run It</h2>
+      <pre><code>npm install
+npm start          <span style="color: var(--muted)"># node ./</span>
+npx eslint .       <span style="color: var(--muted)"># lint</span></code></pre>
+
+      <footer>
+        Skills, commands, and personas sourced from
+        <a href="https://github.com/addyosmani/agent-skills"
+          >addyosmani/agent-skills</a
+        >
+        (MIT). Trimmed to the minimum coherent set —
+        <a
+          href="https://github.com/addyosmani/agent-skills/tree/main/skills"
+          >pull more in</a
+        >
+        as needed.
+      </footer>
+    </main>
+  </body>
+</html>
